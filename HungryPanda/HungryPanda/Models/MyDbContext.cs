@@ -13,6 +13,8 @@ namespace HungryPanda.Models
         }
 
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Area> Areas { get; set; }
 
 
     }

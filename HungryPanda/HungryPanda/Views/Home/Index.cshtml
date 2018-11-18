@@ -1,6 +1,22 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+
 }
+ 
+
+
+@foreach (var admins in Model)
+{
+   <h1>@admins.Name </h1>
+   <p>@admins.Email</p>
+
+}
+
+
+
+
+
+
 
 <div class="jumbotron">
     <h1>ASP.NET</h1>
