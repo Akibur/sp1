@@ -1,47 +1,97 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    //if (Session["user"]== null)
+    //{
+    //    Response.Redirect("~/Cart");
+    //}
+}
+@model HungryPanda.ViewModels.CityAndAreaViewModel
+
+<div class="container-fluid" id="cover-pic">
+    <div class="row container">
+        <div class="col-md-12">
+            <h1 class="main-text">
+                Order Now From your Favoirate
+                <br> Local Resturant.
+            </h1>
+
+
+
+
+
+        </div>
+    </div>
+    @using (Html.BeginForm("ResturantList", "Home", FormMethod.Post, new { }))
+    {
+        <div class="row" style="text-align:center; margin-top: 5%">
+            <div class="col-md-4">
+                <div class="input-group-lg">
+
+
+                    <select name="city" class="custom-select btn-block target1" id="inputGroupSelect04">
+                        <option value="-1" selected="selected">City</option>
+                        @foreach (var cities in Model.Cities)
+                        {
+                            <option value="@cities.Id">@cities.Name</option>
+
+                        }
+
+                    </select>
+
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <select name="area" class="custom-select btn-block targetAreas" id="inputGroupSelect04"></select>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-dark btn-block" type="submit">Start</button>
+
+
+
+            </div>
+
+
+        </div>
+
+    }
+
+
+
+
+
+
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+@section scripts {
+
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.target1').on('change', function () {
+            var cityId = $('.target1 option:selected').val();
+
+            $.ajax({
+                type: 'GET',
+                data: { cityId: cityId },
+                url: '@Url.Action("LoadAreas","Home")',
+                success: function (result) {
+                     var a = '<option value="-1"> Area</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        a += '<option value="' + result[i].Id + '">' + result[i].Name + '</option>';
+
+                    }
+                    $('.targetAreas').html(a);
+                }
+            });
+
+        });
+
+    });
+
+    </script>
+
 
 }
- 
 
-
-@foreach (var admins in Model)
-{
-   <h1>@admins.Name </h1>
-   <p>@admins.Email</p>
-
-}
-
-
-
-
-
-
-
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>

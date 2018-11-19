@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using HungryPanda.Models;
+using HungryPanda.ViewModels;
 
 namespace HungryPanda.Controllers
 {  
@@ -22,10 +23,41 @@ namespace HungryPanda.Controllers
 
         public ActionResult Index()
         {
-            var admins = _context.Admins;
+            IEnumerable<City> cities = _context.Cities;
+            IEnumerable<Area> areas = _context.Areas;
 
-            return View(admins);
+            CityAndAreaViewModel viewModel = new CityAndAreaViewModel();
+            viewModel.Cities = cities;
+            viewModel.Areas = areas;
+
+
+            return View(viewModel);
         }
+
+
+        //THis loads the areas based on the City using Ajax
+        public ActionResult LoadAreas(int cityId)
+        {
+            IEnumerable<Area> areas = _context.Areas;
+            var a = areas.Where(s => s.CityId == cityId).Select(s => new
+            {
+                Id = s.Id,
+                Name = s.Name
+            }).ToList();
+
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         public ActionResult About()
         {
