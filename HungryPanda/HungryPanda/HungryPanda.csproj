@@ -138,11 +138,33 @@
     <Compile Include="Migrations\201811181116041_CityAndAreaModelAdded.Designer.cs">
       <DependentUpon>201811181116041_CityAndAreaModelAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811190617401_CustomerAndResturantOwnerAdded.cs" />
+    <Compile Include="Migrations\201811190617401_CustomerAndResturantOwnerAdded.Designer.cs">
+      <DependentUpon>201811190617401_CustomerAndResturantOwnerAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811190634003_CuisineAndResturantMenuAdded.cs" />
+    <Compile Include="Migrations\201811190634003_CuisineAndResturantMenuAdded.Designer.cs">
+      <DependentUpon>201811190634003_CuisineAndResturantMenuAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811190646342_ResturantReviewAndOrdersTableAdded.cs" />
+    <Compile Include="Migrations\201811190646342_ResturantReviewAndOrdersTableAdded.Designer.cs">
+      <DependentUpon>201811190646342_ResturantReviewAndOrdersTableAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\Area.cs" />
     <Compile Include="Models\City.cs" />
+    <Compile Include="Models\Cuisine.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\DeliveryReview.cs" />
     <Compile Include="Models\MyDbContext.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderedMenuItems.cs" />
+    <Compile Include="Models\ResturantMenu.cs" />
+    <Compile Include="Models\ResturantMenuCategory.cs" />
+    <Compile Include="Models\ResturantOwner.cs" />
+    <Compile Include="Models\ResturantReview.cs" />
+    <Compile Include="Models\Review.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +262,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811181116041_CityAndAreaModelAdded.resx">
       <DependentUpon>201811181116041_CityAndAreaModelAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811190617401_CustomerAndResturantOwnerAdded.resx">
+      <DependentUpon>201811190617401_CustomerAndResturantOwnerAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811190634003_CuisineAndResturantMenuAdded.resx">
+      <DependentUpon>201811190634003_CuisineAndResturantMenuAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811190646342_ResturantReviewAndOrdersTableAdded.resx">
+      <DependentUpon>201811190646342_ResturantReviewAndOrdersTableAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
