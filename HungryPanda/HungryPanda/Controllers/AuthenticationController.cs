@@ -21,6 +21,8 @@ namespace HungryPanda.Controllers
             _context.Dispose();
         }
 
+        //Authentication functions
+
         public Customer AuthenticateCustomer(string email, string password)
         {
             var customer = (from r in _context.Customers where r.Email == email && r.Password == password select r).SingleOrDefault();
@@ -38,7 +40,7 @@ namespace HungryPanda.Controllers
             var ResturantOwner = (from r in _context.ResturantOwners where r.Email == email && r.Password == password select r).SingleOrDefault();
             return ResturantOwner;
         }
-
+        //...............................
 
 
 

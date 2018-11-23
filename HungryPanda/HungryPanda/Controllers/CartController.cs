@@ -6,8 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using HungryPanda.ViewModels;
 using HungryPanda.Models;
- using HungryPanda.ViewModels;
+
 using System.Diagnostics;
 
 
@@ -36,277 +37,255 @@ namespace HungryPanda.Controllers
 
 
     }
+    public class CartController : Controller
+    {
+        private MyDbContext _context;
+        public CartController()
+        {
+            _context = new MyDbContext();
+        }
 
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
 
-    //public class CartController : Controller
-    //{
 
 
 
-    //    //private ICityRepository _city;
-    //    //private IAreaRepository _area;
-    //    //private IResturantOwnerRepository _resturant;
-    //    //private IResturantMenuRepository _resturantMenu;
-    //    //private IResturantMenuCategoryRepository _resturantMenuCategory;
-    //    //private IOrderRepository _order;
-    //    //private IOrderedMenuItemsRepository _orderedMenuItems;
 
 
 
 
 
 
-    //    //public CartController(IOrderedMenuItemsRepository orderedMenuItems, IOrderRepository order, IResturantMenuCategoryRepository resturantMenuCategory, ICityRepository city, IAreaRepository area, IResturantOwnerRepository resturant, IResturantMenuRepository resturantMenu)
-    //    //{
-    //    //    this._city = city;
-    //    //    this._area = area;
-    //    //    this._resturant = resturant;
-    //    //    this._resturantMenu = resturantMenu;
-    //    //    this._resturantMenuCategory = resturantMenuCategory;
-    //    //    this._order = order;
-    //    //    this._orderedMenuItems = orderedMenuItems;
-    //    //}
+        // GET: Cart
+        public ActionResult Index()
+        {
+            return View();
+        }
 
-    //    private MyDbContext _context;
-    //    public CartController()
-    //    {
-    //        _context = new MyDbContext();
-    //    }
+        //Add to cart
+        public ActionResult AddToCart(int itemId)
+        {
+            ResturantMenu resturantMenu = (from r in _context.ResturantMenus where r.Id == itemId select r).SingleOrDefault(); ;
 
-    //    protected override void Dispose(bool disposing)
-    //    {
-    //        _context.Dispose();
-    //    }
 
+            if (Session["cart"] == null)
 
+            {
 
+                List<CartItem> cart = new List<CartItem>();
 
-    //    // GET: Cart
-    //    public ActionResult Index()
-    //    {
-    //        return View();
-    //    }
+                cart.Add(new CartItem(resturantMenu, 1));
+                Session["cart"] = cart;
 
-    //    //Add to cart
-    //    public ActionResult AddToCart(int itemId)
-    //    {
-    //        ResturantMenu resturantMenu = _resturantMenu.FindById(itemId);
+            }
+            else
+            {
 
+                List<CartItem> cart = (List<CartItem>)Session["cart"];
 
-    //        if (Session["cart"] == null)
 
-    //        {
+                cart.Add(new CartItem(resturantMenu, 1));
+                Session["cart"] = cart;
 
-    //            List<CartItem> cart = new List<CartItem>();
+            }
 
-    //            cart.Add(new CartItem(resturantMenu, 1));
-    //            Session["cart"] = cart;
 
-    //        }
-    //        else
-    //        {
 
-    //            List<CartItem> cart = (List<CartItem>)Session["cart"];
 
+            return Json(resturantMenu, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public ActionResult RemoveFromCart(int itemId)
+        {
+            List<CartItem> cart = (List<CartItem>)Session["cart"];
+            var itemToRemove = cart.FirstOrDefault(r => r.OrderItem.Id == itemId);
+            cart.Remove(itemToRemove);
 
-    //            cart.Add(new CartItem(resturantMenu, 1));
-    //            Session["cart"] = cart;
+            Session["Cart"] = cart;
 
-    //        }
+            return RedirectToAction("Index", "Cart");
 
 
+        }
 
+        public ActionResult EditQuantity(int itemId, int itemQuantity)
+        {
+            List<CartItem> cart = (List<CartItem>)Session["cart"];
+            cart.FirstOrDefault(r => r.OrderItem.Id == itemId).UpdateQuantity(itemQuantity);
 
-    //        return Json(resturantMenu, JsonRequestBehavior.AllowGet);
-    //    }
-    //    [HttpGet]
-    //    public ActionResult RemoveFromCart(int itemId)
-    //    {
-    //        List<CartItem> cart = (List<CartItem>)Session["cart"];
-    //        var itemToRemove = cart.FirstOrDefault(r => r.OrderItem.Id == itemId);
-    //        cart.Remove(itemToRemove);
+            Session["cart"] = cart;
 
-    //        Session["Cart"] = cart;
+            return RedirectToAction("Index", "Cart");
 
-    //        return RedirectToAction("Index", "Cart");
+        }
 
+        public ActionResult Checkout()
+        {
+            if (Session["user"] == null)
+            {
+                Response.Redirect("~/Authentication");
 
-    //    }
+            }
+            var user = Session["user"] as Customer;
 
-    //    public ActionResult EditQuantity(int itemId, int itemQuantity)
-    //    {
-    //        List<CartItem> cart = (List<CartItem>)Session["cart"];
-    //        cart.FirstOrDefault(r => r.OrderItem.Id == itemId).UpdateQuantity(itemQuantity);
+            IEnumerable<Order> orders = _context.Orders.Include(o => o.Customer);
+            IEnumerable<OrderedMenuItems> orderedMenuItems = _context.OrderedMenuItems.Include(o => o.ResturantMenu);
+            IEnumerable<ResturantOwner> resturantOwners = _context.ResturantOwners.Include(r => r.Area);
+            IEnumerable<ResturantMenu> resturantMenu = _context.ResturantMenus.Include(r => r.ResturantOwner);
 
-    //        Session["cart"] = cart;
+            var resturants = from o in orders
+                             join orderedMenuItem in orderedMenuItems on o.Id equals orderedMenuItem.OrderId
+                             join resturantMenus in resturantMenu on orderedMenuItem.ResturantMenuId equals resturantMenus.Id
+                             join resturantOwner in resturantOwners on resturantMenus.ResturantOwnerId equals resturantOwner.Id
 
-    //        return RedirectToAction("Index", "Cart");
+                             select new
+                             {
+                                 rName = resturantOwner.ResturantName
 
-    //    }
+                             };
+            var res = "";
+            foreach (var item in resturants)
+            {
+                res = item.rName;
+            }
+            //Add the order in the database
 
-    //    public ActionResult Checkout()
-    //    {
-    //        if (Session["user"] == null)
-    //        {
-    //            Response.Redirect("~/Authentication");
+            Order order = new Order
+            {
+                ResturantName = res,
+                OrderDate = DateTime.Now,
+                OrderStatus = OrderStatus.Processing,
+                DeliveryDate = DateTime.Now.AddHours(2),
+                CustomerId = user.Id,
+                ReviewId = null
+            };
 
-    //        }
-    //        var user = Session["user"] as Customer;
 
-    //        IEnumerable<Order> orders = _order.GetOrders();
-    //        IEnumerable<OrderedMenuItems> orderedMenuItems = _orderedMenuItems.GetOrderedMenuItems();
-    //        IEnumerable<ResturantOwner> resturantOwners = _resturant.GetResturantOwner();
-    //        IEnumerable<ResturantMenu> resturantMenu = _resturantMenu.GetResturantMenu();
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+            //get OrderId from the database
 
-    //        var resturants = from o in orders
-    //                         join orderedMenuItem in orderedMenuItems on o.Id equals orderedMenuItem.OrderId
-    //                         join resturantMenus in resturantMenu on orderedMenuItem.ResturantMenuId equals resturantMenus.Id
-    //                         join resturantOwner in resturantOwners on resturantMenus.ResturantOwnerId equals resturantOwner.Id
+            var or = _context.Orders.Include(o => o.Customer).Last();
 
-    //                         select new
-    //                         {
-    //                             rName = resturantOwner.ResturantName
+            var orderId = or.Id;
+            //Insert Ordered Items
 
-    //                         };
-    //        var res = "";
-    //        foreach (var item in resturants)
-    //        {
-    //            res = item.rName;
-    //        }
-    //        //Add the order in the database
+            foreach (var cart in (List<CartItem>)Session["cart"])
+            {
+                if (cart != null)
+                {
+                    OrderedMenuItems orderedItems = new OrderedMenuItems
+                    {
+                        Quantity = cart.Quantity,
+                        Price = cart.OrderItem.Price,
+                        OrderId = orderId,
+                        ResturantMenuId = cart.OrderItem.Id
+                    };
 
-    //        Order order = new Order
-    //        {
-    //            ResturantName = res,
-    //            OrderDate = DateTime.Now,
-    //            OrderStatus = OrderStatus.Processing,
-    //            DeliveryDate = DateTime.Now.AddHours(2),
-    //            CustomerId = user.Id,
-    //            ReviewId = null
-    //        };
 
+                    _context.OrderedMenuItems.Add(orderedItems);
+                    _context.SaveChanges();
+                }
 
-    //        _order.Add(order);
 
-    //        //get OrderId from the database
 
-    //        var or = _order.GetOrders().Last();
 
-    //        var orderId = or.Id;
-    //        //Insert Ordered Items
+            }
+            Session["cart"] = null;
 
-    //        foreach (var cart in (List<CartItem>)Session["cart"])
-    //        {
-    //            if (cart != null)
-    //            {
-    //                OrderedMenuItems orderedItems = new OrderedMenuItems
-    //                {
-    //                    Quantity = cart.Quantity,
-    //                    Price = cart.OrderItem.Price,
-    //                    OrderId = orderId,
-    //                    ResturantMenuId = cart.OrderItem.Id
-    //                };
 
 
-    //                _orderedMenuItems.Add(orderedItems);
-    //            }
 
 
 
+            return View();
+        }
 
-    //        }
-    //        Session["cart"] = null;
 
 
 
 
 
 
-    //        return View();
-    //    }
 
 
 
 
 
 
+        // GET: Cart/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
 
+        // GET: Cart/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
 
+        // POST: Cart/Create
+        [HttpPost]
+        public ActionResult Create(FormCollection collection)
+        {
+            try
+            {
+                // TODO: Add insert logic here
 
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
+        // GET: Cart/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
 
+        // POST: Cart/Edit/5
+        [HttpPost]
+        public ActionResult Edit(int id, FormCollection collection)
+        {
+            try
+            {
+                // TODO: Add update logic here
 
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
-    //    // GET: Cart/Details/5
-    //    public ActionResult Details(int id)
-    //    {
-    //        return View();
-    //    }
+        // GET: Cart/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
 
-    //    // GET: Cart/Create
-    //    public ActionResult Create()
-    //    {
-    //        return View();
-    //    }
+        // POST: Cart/Delete/5
+        [HttpPost]
+        public ActionResult Delete(int id, FormCollection collection)
+        {
+            try
+            {
+                // TODO: Add delete logic here
 
-    //    // POST: Cart/Create
-    //    [HttpPost]
-    //    public ActionResult Create(FormCollection collection)
-    //    {
-    //        try
-    //        {
-    //            // TODO: Add insert logic here
-
-    //            return RedirectToAction("Index");
-    //        }
-    //        catch
-    //        {
-    //            return View();
-    //        }
-    //    }
-
-    //    // GET: Cart/Edit/5
-    //    public ActionResult Edit(int id)
-    //    {
-    //        return View();
-    //    }
-
-    //    // POST: Cart/Edit/5
-    //    [HttpPost]
-    //    public ActionResult Edit(int id, FormCollection collection)
-    //    {
-    //        try
-    //        {
-    //            // TODO: Add update logic here
-
-    //            return RedirectToAction("Index");
-    //        }
-    //        catch
-    //        {
-    //            return View();
-    //        }
-    //    }
-
-    //    // GET: Cart/Delete/5
-    //    public ActionResult Delete(int id)
-    //    {
-    //        return View();
-    //    }
-
-    //    // POST: Cart/Delete/5
-    //    [HttpPost]
-    //    public ActionResult Delete(int id, FormCollection collection)
-    //    {
-    //        try
-    //        {
-    //            // TODO: Add delete logic here
-
-    //            return RedirectToAction("Index");
-    //        }
-    //        catch
-    //        {
-    //            return View();
-    //        }
-    //    }
-    //}
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+    }
 }
