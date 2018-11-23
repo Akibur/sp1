@@ -131,6 +131,7 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Resturant_OwnerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -3031,6 +3032,11 @@
     <Content Include="Views\Customer\edit_customer_profile.cshtml" />
     <Content Include="Views\Customer\orders_customer.cshtml" />
     <Content Include="Views\Customer\Register.cshtml" />
+    <Content Include="Views\Resturant_Owner\change_password.cshtml" />
+    <Content Include="Views\Resturant_Owner\Dashboard.cshtml" />
+    <Content Include="Views\Resturant_Owner\edit_resturantowner_profile.cshtml" />
+    <Content Include="Views\Resturant_Owner\orders_resturantOwner.cshtml" />
+    <Content Include="Views\Resturant_Owner\ResturantOwner_profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using HungryPanda.ViewModels;
 using HungryPanda.Models;
 
-namespace HungryPanda.Web.Controllers
+namespace HungryPanda.Controllers
 {
     public class AdminsController : Controller
     {

@@ -7,7 +7,7 @@ using System.Web.Mvc;
  using HungryPanda.Models;
 using HungryPanda.ViewModels;
 
-namespace HungryPanda.Web.Controllers
+namespace HungryPanda.Controllers
 {
     public class CustomerController : Controller
     {
