@@ -1,0 +1,133 @@
+﻿
+@{
+    Layout = null;
+}
+
+@model HungryPanda.ViewModels.CityAndAreaViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="../../images/icons/favicon.png" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../fonts/themify/themify-icons.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../fonts/elegant-font/html-css/style.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../vendor/slick/slick.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../vendor/lightbox2/css/lightbox.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../../css/util.css">
+    <link rel="stylesheet" type="text/css" href="../../css/main.css">
+    <link href="../../css/signinup.css" rel="stylesheet">
+    <!--===============================================================================================-->
+</head>
+<body>
+
+
+    <div class="container " style="width: 40%; margin-top: 50px; ">
+        @if (ViewBag.messege != null)
+        {
+            <div class="alert alert-success">
+                <strong>@ViewBag.messege</strong>
+            </div>
+        }
+        <h1 class="h3 mb-3 font-weight-normal">Add New resturant</h1>
+
+        @using (Html.BeginForm("addNewResturant", "Admins", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-signin" }))
+        {
+
+            <input type="text" name="ResturantOwnerName" class="form-control" id="ResturantOwnerName" placeholder="Resturant Owner Name">
+            <input type="text" name="ResturantName" class="form-control" id="ResturantName" placeholder="Resturant Name">
+            <input type="email" name="Email" class="form-control" id="Email" placeholder="Email">
+            <input type="text" name="Phone" class="form-control" id="Phone" placeholder="Phone">
+            <input type="text" name="Address" class="form-control" id="Address" placeholder="Address">
+            <input type="text" value="resturantOwner" name="Role" class="form-control" hidden id="Address" placeholder="Address">
+            <input type="number" value="1" name="ResturantStatus" class="form-control" hidden id="Address" placeholder="Address">
+            <input type="datetime" value="@DateTime.Now" name="JoinDate" class="form-control" hidden id="Address" placeholder="Address">
+
+
+            <div class="input-group-lg">
+
+
+                <select name="city" class="custom-select btn-block " id="inputGroupSelect04">
+                    <option value="-1" selected="selected">Area</option>
+                    @foreach (var area in Model.Areas)
+                    {
+                        <option name="AreaId" id="AreaId" value="@area.Id">@area.Name</option>
+
+                    }
+
+                </select>
+
+            </div>
+
+            <input type="Password" id="Password" class="form-control" placeholder="Password" required>
+
+            <button class="btn btn-lg btn-primary btn-dark btn-block" type="submit">Add</button>
+
+
+        }
+    </div>
+</body>
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+@section scripts {
+
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.target1').on('change', function () {
+            var cityId = $('.target1 option:selected').val();
+
+            $.ajax({
+                type: 'GET',
+                data: { cityId: cityId },
+                url: '@Url.Action("LoadAreas","Home")',
+                success: function (result) {
+                     var a = '<option value="-1"> Area</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        a += '<option value="' + result[i].Id + '">' + result[i].Name + '</option>';
+
+                    }
+                    $('.targetAreas').html(a);
+                }
+            });
+
+        });
+
+                });
+                }
+
+
+    </script>
+
+</html>
+
+
+
+}
+

@@ -50,27 +50,43 @@ namespace HungryPanda.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
-        public ActionResult About()
+        //post request goes.Displays all the resturants based on city and area
+        [HttpPost]
+        public ActionResult ResturantList()
         {
-            ViewBag.Message = "Your application description page.";
 
-            return View();
+            var areaid = Int32.Parse(Request.Form["area"]);
+
+            IEnumerable<ResturantOwner> resturants = _context.ResturantOwners;
+            resturants = resturants.Where(c => c.AreaId == areaid);
+
+            ResturantListViewModel viewModel = new ResturantListViewModel();
+            viewModel.ResturantOwners = resturants;
+
+
+            return View(viewModel);
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
-            return View();
+        [HttpGet]
+        public ActionResult ResturantMenu(int resturantId)
+        {
+
+
+
+            IEnumerable<ResturantMenu> resturantMenu = _context.ResturantMenus;
+            IEnumerable<ResturantMenuCategory> resturantMenuCategory = _context.ResturantMenuCategories;
+
+
+
+            resturantMenu = resturantMenu.Where(c => c.ResturantOwnerId == resturantId);
+
+            ResturantMenuViewModel viewModel = new ResturantMenuViewModel();
+            viewModel.ResturantMenu = resturantMenu;
+            viewModel.ResturantMenuCategories = resturantMenuCategory;
+
+            return View(viewModel);
         }
+
     }
 }
