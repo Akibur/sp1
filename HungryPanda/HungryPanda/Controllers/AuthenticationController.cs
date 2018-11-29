@@ -68,7 +68,7 @@ namespace HungryPanda.Controllers
             {
                 Session["user"] = customer;
                 Session["role"] = "customer";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Dashboard", "Customer");
 
             }
             else if (admin != null)
@@ -76,7 +76,7 @@ namespace HungryPanda.Controllers
                 Session["user"] = admin;
                 Session["role"] = "admin";
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Dashboard", "Admins");
 
             }
             else if (resturantOwner != null)
@@ -85,7 +85,7 @@ namespace HungryPanda.Controllers
                 Session["user"] = resturantOwner;
                 Session["role"] = "resturantOwner";
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Dashboard", "Resturant_Owner");
 
             }
             else

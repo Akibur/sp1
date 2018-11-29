@@ -73,7 +73,7 @@ namespace HungryPanda.Controllers
         [HttpPost]
         public ActionResult change_password([Bind(Include = "Password")] Customer customer)
         {
-            ResturantOwner customerUpdate = (ResturantOwner)Session["user"];
+            Customer customerUpdate = (Customer)Session["user"];
 
 
             if (Request["currentPassword"] == customerUpdate.Password)
@@ -94,6 +94,7 @@ namespace HungryPanda.Controllers
                 {
                     ViewBag.message = "New Password and Confirm Password do not match";
                     return View();
+                    
 
                 }
 

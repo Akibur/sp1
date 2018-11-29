@@ -57,7 +57,7 @@ namespace HungryPanda.Controllers
 
             IEnumerable<Order> orders = _context.Orders;
             IEnumerable<OrderedMenuItems> orderedMenuItems = _context.OrderedMenuItems;
-            IEnumerable<ResturantOwner> resturantOwners = _context.ResturantOwners;
+            IEnumerable<ResturantOwner> resturantOwners = _context.ResturantOwners.Include(r => r.Area);
             IEnumerable<ResturantMenu> resturantMenu = _context.ResturantMenus;
 
 
@@ -207,9 +207,21 @@ namespace HungryPanda.Controllers
         [HttpPost]
         public ActionResult edit_admin_profile([Bind(Include = "Name,Email,Address,Phone")] Admin admin)
         {
-            _context.Entry(admin).State = EntityState.Modified;
+
+
+            Admin adminUpdate = (Admin)Session["user"];
+
+            adminUpdate.Name = admin.Name;
+            adminUpdate.Email = admin.Email;
+            adminUpdate.Address = admin.Address;
+            adminUpdate.Phone = admin.Phone;
+            Session["user"] = adminUpdate;
+            _context.Entry(adminUpdate).State = EntityState.Modified;
             _context.SaveChanges();
-             return View("Dashboard");
+
+
+            ViewBag.message = "Profile Changed";
+            return View(adminUpdate);
         }
         //[HttpGet]
         public ActionResult change_password()
@@ -219,12 +231,44 @@ namespace HungryPanda.Controllers
         [HttpPost]
         public ActionResult change_password([Bind(Include = "Password")] Admin admin)
         {
-            _context.Entry(admin).State = EntityState.Modified;
-            _context.SaveChanges();
-            return View();
+            Admin adminUpdate = (Admin)Session["user"];
+
+
+            if (Request["currentPassword"] == adminUpdate.Password)
+            {
+                if (admin.Password == Request["confirmPassword"])
+                {
+                    adminUpdate.Password = admin.Password;
+
+                    _context.Entry(adminUpdate).State = EntityState.Modified;
+                    _context.SaveChanges();
+                    ViewBag.message = "Password Changed";
+                    return View();
+
+
+
+                }
+                else
+                {
+                    ViewBag.message = "New Password and Confirm Password do not match";
+                    return View();
+
+                }
+
+
+            }
+            else
+            {
+                ViewBag.message = "Password incorret";
+                return View();
+            }
+
+
             //    return View();
         }
-        public ActionResult addNewResturant()
+
+        [HttpGet]
+         public ActionResult addNewResturant()
         {
             IEnumerable<Area> area = _context.Areas;
             IEnumerable<City> cities = _context.Cities;
@@ -235,20 +279,21 @@ namespace HungryPanda.Controllers
                 Areas = area,
                 Cities = cities
             };
-
-            return View(viewModel);
+             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult addNewResturant([Bind(Include = "JoinDate,ResturantStatus,Role,ResturantOwnerName,ResturantName,Email,Phone,Address,Password,AreaId")]ResturantOwner resturant)
+        public ActionResult addNewResturant([Bind(Include = "ResturantOwnerName,ResturantName,Email,Phone,Address,Role,ResturantStatus,JoinDate,AreaId,Password")]ResturantOwner resturant)
         {
-            //resturant.AreaId = Int32.Parse(Request["AreaId"]);
+            //System.Diagnostics.Debug.WriteLine(resturant.AreaId);
+            //System.Diagnostics.Debug.WriteLine(resturant.Password);
+
 
             _context.ResturantOwners.Add(resturant);
             _context.SaveChanges();
             ViewBag.messege = "Resturant Owner Created";
 
-            return View("Dashboard");
+            return RedirectToAction("addNewResturant","Admins");
 
 
 
