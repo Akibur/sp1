@@ -49,6 +49,8 @@ namespace HungryPanda.Controllers
         [HttpPost]
         public ActionResult edit_customer_profile([Bind(Include = "Name,Email,Address,Phone")] Customer customer)
         {
+
+
             Customer customerUpdate = (Customer)Session["user"];
 
             customerUpdate.Name = customer.Name;

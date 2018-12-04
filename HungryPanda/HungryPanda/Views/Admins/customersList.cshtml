@@ -14,13 +14,12 @@
     <!--===============================================================================================-->
     @Scripts.Render("~/bundles/jquery")
 
-    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @Scripts.Render("~/bundles/bootstrap")
 
     @Styles.Render("~/Content/css")
-    @*@Styles.Render("~/Content/DataTables/css/dataTables.bootstrap.css")*@
+    @Styles.Render("~/Content/DataTables/css/dataTables.bootstrap.css")
+    @Styles.Render("~/Content/DataTables/css/dataTables.jquery.css")
 
-    @*@Scripts.Render("~/bundles/modernizr")*@
-    @*@RenderSection("scripts", required: false)*@
     @Styles.Render("~/Content/fonts/font-awesome-4.7.0/css/font-awesome.min.css")
     @Styles.Render("~/Content/vendor/bootstrap/css/bootstrap.min.css")
     @Styles.Render("~/Content/fonts/themify/themify-icons.css")
@@ -35,19 +34,18 @@
     @Styles.Render("~/Content/vendor/lightbox2/css/lightbox.min.css")
     @Styles.Render("~/Content/css/util.css")
     @Styles.Render("~/Content/css/main.css")
-    <link rel="stylesheet" href="css/starability-all.min.css">
-
+ 
      
     <!--===============================================================================================-->
 </head>
-<body  class="animsition mb-auto">
-    
+<body class="animsition mb-auto">
+
 
     <div class="mt-5 m-b-99 centered ">
         <h2 class="text-center">Customers</h2>
 
-        <table   id="datatable" class="table table-condensed">
-            <thead  >
+        <table id="datatable" class="table table-condensed">
+            <thead>
                 <tr>
 
                     <th>Customer Name</th>
@@ -59,7 +57,7 @@
 
                 </tr>
             </thead>
-            <tbody   >
+            <tbody>
                 @foreach (var c in Model)
                 {
 
@@ -92,7 +90,7 @@
     </div>
 
     @*@Scripts.Render("~/bundles/bootstrap")*@
-    @*@Scripts.Render("~/Content/vendor/jquery/jquery-3.2.1.min.js")*@
+    @Scripts.Render("~/Content/vendor/jquery/jquery-3.2.1.min.js")
     @Scripts.Render("~/Content/vendor/animsition/js/animsition.min.js")
 
     @Scripts.Render("~/Content/vendor/bootstrap/js/popper.js")
@@ -106,27 +104,29 @@
     @Scripts.Render("~/Content/js/main.js")
     @Scripts.Render("~/bundles/jqueryval")
 
-     
 
 
-    @*@Scripts.Render("~/Scripts/DataTables/jquery.dataTables.js")
-    @Scripts.Render("~/Scripts/DataTables/dataTables.bootstrap.js")*@
 
-    @section scripts
-        {
-
-        @*<script>
+    @Scripts.Render("~/Scripts/DataTables/jquery.dataTables.js")
+    @Scripts.Render("~/Scripts/DataTables/dataTables.bootstrap.js")
 
 
+   
+
+        <script type="text/javascript">
 
             $(document).ready(function () {
-
-                $("#datatable").DataTable();
-
-            });
-        </script>*@
+                console.log("hello customer");
+        $("#datatable").DataTable();
 
 
-    }
+    });
+
+        </script>
+
+
+    
+
+    
 </body>
 </html>

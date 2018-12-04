@@ -92,16 +92,17 @@ namespace HungryPanda.Web.Controllers
             return View(owner);
         }
         [HttpPost]
-        public ActionResult edit_resturantowner_profile([Bind(Include = "Name,Email,Address,Phone")] ResturantOwner owner)
+        public ActionResult edit_resturantowner_profile([Bind(Include = "ResturantOwnerName,ResturantName,Email,Address,Phone")] ResturantOwner owner)
         {
-            ResturantOwner owner1 = (ResturantOwner)Session["user"];
+            ResturantOwner ownerUpdate = (ResturantOwner)Session["user"];
 
-            owner1.ResturantOwnerName = owner.ResturantOwnerName;
-            owner1.Email = owner.Email;
-            owner1.Address = owner.Address;
-            owner1.Phone = owner.Phone;
-            Session["user"] = owner1;
-            _context.Entry(owner1).State = EntityState.Modified;
+            ownerUpdate.ResturantOwnerName = owner.ResturantOwnerName;
+            ownerUpdate.ResturantName = owner.ResturantName;
+            ownerUpdate.Email = owner.Email;
+            ownerUpdate.Address = owner.Address;
+            ownerUpdate.Phone = owner.Phone;
+            Session["user"] = ownerUpdate;
+            _context.Entry(ownerUpdate).State = EntityState.Modified;
             _context.SaveChanges();
 
             ViewBag.message = "Profile Changed";
@@ -157,6 +158,12 @@ namespace HungryPanda.Web.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult addMenu()
+        {
+            return View();
+
+        }
 
     }
 }

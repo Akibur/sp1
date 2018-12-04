@@ -2,7 +2,7 @@
 @{
     Layout = null;
 
-    if (Model.Role != "resturantOwner")
+    if (Model.Role != "ResturantOwner")
     {
         Response.Redirect("~/Authentication");
 
@@ -116,7 +116,7 @@
                             <hr style="margin:5px 0 5px 0;">
 
 
-                            <div class="col-sm-5 col-xs-6 tital ">Name:</div><div class="col-sm-7">@Model.ResturantOwnerName</div>
+                            <div class="col-sm-5 col-xs-6 tital ">Resturant Name:</div><div class="col-sm-7">@Model.ResturantName</div>
                             <div class="clearfix"></div>
                             <div class="bot-border"></div>
 

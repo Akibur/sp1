@@ -9,7 +9,7 @@
 
     var user = (Admin)Session["user"];
 
-    if (user.Role != "admin")
+    if (user.Role != "admin" || user.Role == null)
     {
         Response.Redirect("~/Authentication");
 
@@ -60,9 +60,29 @@
         </div>
     </div>
     <div class="col-md-9">
-        <iframe name="contentFrame" scrolling="no" frameborder="0" width="100%" height="800px" src=@Url.Action("Admin_profile","Admins")></iframe>
+        <iframe name="contentFrame" scrolling="yes" frameborder="0" width="100%" height="800px" src=@Url.Action("Admin_profile","Admins")></iframe>
 
     </div>
 
 
 </div>
+
+
+@Scripts.Render("~/Scripts/DataTables/jquery.dataTables.js")
+@Scripts.Render("~/Scripts/DataTables/dataTables.bootstrap.js")
+@section scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            console.log("hello dashboard");
+            $("#datatable").DataTable();
+
+
+        });
+
+    </script>
+
+
+}
+

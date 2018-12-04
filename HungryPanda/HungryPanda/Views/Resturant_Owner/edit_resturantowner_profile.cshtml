@@ -125,14 +125,32 @@
 
                         <div class="clearfix"></div>
                         <div class="bot-border"></div>
-                        <div class="col-sm-5 col-xs-6 tital ">Name:</div>
+
+
+                        <div class="col-sm-5 col-xs-6 tital ">Owner Name:</div>
                         <div class="col-sm-7">
                             <div class="form-group col-sm*">
-                                <input class="form-control" name="Name" id="Last_Name" type="text" value=@Model.ResturantOwnerName>
+                                <input class="form-control" name="ResturantOwnerName" id="Name" type="text" value=@Model.ResturantOwnerName>
                             </div>
                         </div>
                         <div class="clearfix"></div>
                         <div class="bot-border"></div>
+                    
+                        
+                        
+                        <div class="col-sm-5 col-xs-6 tital ">Resturant Name:</div>
+                        <div class="col-sm-7">
+                            <div class="form-group col-sm*">
+                                <input class="form-control" name="ResturantName" id="Name" type="text" value=@Model.ResturantName>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="bot-border"></div>
+
+
+
+
+
                         <div class="col-sm-5 col-xs-6 tital ">Email:</div>
                         <div class="col-sm-7">
                             <div class="form-group col-sm*">
@@ -152,7 +170,7 @@
                         <div class="col-sm-5 col-xs-6 tital ">Mobile No:</div>
                         <div class="col-sm-7">
                             <div class="form-group col-sm*">
-                                <input class="form-control" name="Phone" id="Mobile_No" type="text" value=@Model.Phone>
+                                <input class="form-control" name="Phone" id="Phone" type="text" value=@Model.Phone>
                             </div>
                             <button class="btn btn-lg  btn-dark btn-block" type="submit">Update</button>
                         </div>
